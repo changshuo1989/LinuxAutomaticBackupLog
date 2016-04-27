@@ -1,0 +1,3 @@
+#system_name log_dir log_file_name 
+database /home/smithers/log/db log
+file /home/smithers/log/file log
