@@ -24,7 +24,7 @@ function addIntoIncrontab(){
 	c_file="$3"
 	t_dir='$@'
 	t_file='$#'
-	command="${c_dir} IN_MODIFY $(which bash) ${SCRIPT_DIR}${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${t_dir} ${t_file}"
+	command="${c_dir} IN_CLOSE_WRITE $(which bash) ${SCRIPT_DIR}${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${t_dir} ${t_file}"
 	echo "${command}" >> ${TEMP_INCRONTAB}
 }
 function loadIncrontab(){
