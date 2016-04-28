@@ -20,7 +20,7 @@ ERRORS_LINE_NUM=2
 INTERVAL_LINE_NUM=2
 
 
-if [ "`$(which diff) ${DIR}/${FILE} ${TRIGGER_DIR}/${TRIGGER_FILE}`" = "" ]; then
+if [ "`$(which diff) ${DIR}/${FILE} ${TRIGGER_DIR}/${TRIGGER_FILE}`" = "" ] && [ "$FILE" == "$TRIGGER_FILE" ]; then
 	while read LINE
 	do
 		#echo $LINE >> /root/file
@@ -86,7 +86,7 @@ if [ "`$(which diff) ${DIR}/${FILE} ${TRIGGER_DIR}/${TRIGGER_FILE}`" = "" ]; the
 			fi				
 		fi		
 	done < ${TRIGGER_DIR}/${TRIGGER_FILE}
-	if [ $START_TIME != "" ] && [ $END_TIME != "" ] && [ $ELAPSED_TIME != "" ] && [ $ERRORS != "" ]; then
+	if [ "$START_TIME" != "" ] && [ "$END_TIME" != "" ] && [ "$ELAPSED_TIME" != "" ] && [ "$ERRORS" != "" ]; then
 		#send curl request
 		:
 	fi

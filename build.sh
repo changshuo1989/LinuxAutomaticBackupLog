@@ -6,6 +6,9 @@ CONFIG_LOG=./config_log
 LOG_INFO=info.sh
 TEMP_INCRONTAB=incron
 CONFIG_LOG_NUM=3
+
+
+
 function copyIncrontab(){
 	incrontab -l > ${TEMP_INCRONTAB}
 }
