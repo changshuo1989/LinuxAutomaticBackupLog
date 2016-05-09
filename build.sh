@@ -5,7 +5,7 @@ SCRIPT_DIR=/root/script/
 CONFIG_LOG=./config_log
 LOG_INFO=info.sh
 TEMP_INCRONTAB=incron
-CONFIG_LOG_NUM=3
+CONFIG_LOG_NUM=4
 
 
 
@@ -22,9 +22,10 @@ function addIntoIncrontab(){
 	c_name="$1"
 	c_dir="$2"
 	c_file="$3"
+	c_destination="$4"
 	t_dir='$@'
 	t_file='$#'
-	command="${c_dir} IN_CLOSE_WRITE $(which bash) ${SCRIPT_DIR}${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${t_dir} ${t_file}"
+	command="${c_dir} IN_CLOSE_WRITE $(which bash) ${SCRIPT_DIR}${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${c_destination} ${t_dir} ${t_file}"
 	echo "${command}" >> ${TEMP_INCRONTAB}
 }
 function loadIncrontab(){
@@ -55,7 +56,10 @@ if [ "`which incrontab`" = "" ]; then
 	exit 1;
 
 fi
-
+#check curl
+if [ "`which curl`" = "" ]; then
+	echo "No curl tool found, you might need this tool to send curl requests!"
+fi
 
 copyIncrontab
 copyScript
@@ -63,7 +67,9 @@ while read LINE
 do
 	#variable
 	name=""
+	dir=""
 	file=""
+	destination="*"
 	
 	if [[ ! $LINE == \#* ]]; then 
 		IFS=' ' read -a CONFIG_ARRAY <<< "$LINE"
@@ -74,7 +80,9 @@ do
 			dir=${CONFIG_ARRAY[1]}
 			#echo $file
 			file=${CONFIG_ARRAY[2]}
-			addIntoIncrontab "$name" "$dir" "$file"
+			#destination
+			destination=${CONFIG_ARRAY[3]}
+			addIntoIncrontab "$name" "$dir" "$file" "$destination"
 		fi
 
 	fi
