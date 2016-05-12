@@ -9,6 +9,8 @@ TRIGGER_DIR=$6
 TRIGGER_FILE=$7
 CONFIG_SERVERS=$8
 SUB_SCRIPT=$9
+LOG_DIR=$10
+LOG_FILE=$11
 
 START_TIME=""
 END_TIME=""
@@ -23,13 +25,8 @@ ELAPSED_TIME_LINE_NUM=2
 ERRORS_LINE_NUM=2
 INTERVAL_LINE_NUM=2
 
-LOG_DIR=/var/log/backups/
-LOG_FILE=push.log
+CONFIG_SERVERS_NUM=5
 
-
-#create log file
-$(which mkdir) -p ${LOG_DIR}
-$(which touch) ${LOG_DIR}${LOG_FILE}
 
 
 if [ "`$(which diff) ${DIR}/${FILE} ${TRIGGER_DIR}/${TRIGGER_FILE}`" = "" ] && [ "$FILE" == "$TRIGGER_FILE" ]; then
@@ -119,7 +116,26 @@ if [ "`$(which diff) ${DIR}/${FILE} ${TRIGGER_DIR}/${TRIGGER_FILE}`" = "" ] && [
 		while read LINE
 		do
 			#variables
-					
+			server_name=""
+			server_host=""
+			server_port=""
+			server_password=""
+			server_folder=""
+			
+			if [[ ! $LINE == \#* ]]; then
+				#read variables from config file
+				IFS=' ' read -a CONFIG_ARRAY <<< "$LINE";
+				if [ ${#CONFIG_ARRAY[@]} == $CONFIG_SERVERS_NUM ]; then
+					server_name=${CONFIG_ARRAY[0]};
+					server_host=${CONFIG_ARRAY[1]};
+					server_port=${CONFIG_ARRAY[2]};
+					server_password=${CONFIG_ARRAY[3]};
+					server_folder=${CONFIG_ARRAY[4]};
+					#create sub process
+					./${SUB_SCRIPT} ${NAME} ${server_name} ${server_host} ${server_port} ${server_password} ${server_folder} ${LOCAL_FOLER} ${ERRORS} ${INTERVAL} ${DESTINATION} &
+				fi
+				
+			fi		
 
 		done < $CONFIG_SERVERS
 	fi

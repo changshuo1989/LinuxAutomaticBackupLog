@@ -9,7 +9,8 @@ CONFIG_SERVERS=config_servers
 TEMP_INCRONTAB=incron
 CONFIG_LOG_NUM=5
 
-
+LOG_DIR=/var/log/backups/
+LOG_FILE=push.log
 
 function copyIncrontab(){
 	incrontab -l > ${TEMP_INCRONTAB}
@@ -30,7 +31,7 @@ function addIntoIncrontab(){
 	c_local_folder="$5"
 	t_dir='$@'
 	t_file='$#'
-	command="${c_dir} IN_CLOSE_WRITE $(which bash) ${SCRIPT_DIR}${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${c_destination} ${c_local_folder} ${t_dir} ${t_file} ${CONFIG_SERVERS} ${PUSH_INFO}"
+	command="${c_dir} IN_CLOSE_WRITE $(which bash) ${SCRIPT_DIR}${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${c_destination} ${c_local_folder} ${t_dir} ${t_file} ${CONFIG_SERVERS} ${PUSH_INFO} ${LOG_DIR} ${LOG_FILE}"
 	echo "${command}" >> ${TEMP_INCRONTAB}
 }
 function loadIncrontab(){
@@ -64,7 +65,18 @@ fi
 #check curl
 if [ "`which curl`" = "" ]; then
 	echo "No curl tool found, you might need this tool to send curl requests!"
+	
 fi
+
+#check sshpass
+if [ "`which sshpass`" = "" ]; then
+	echo "No sshpass found, you might need this tool to push files!"
+fi
+
+#create log file
+$(which mkdir) -p ${LOG_DIR}
+$(which touch) ${LOG_DIR}${LOG_FILE}
+
 
 copyIncrontab
 copyScript
