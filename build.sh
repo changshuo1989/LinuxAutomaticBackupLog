@@ -4,8 +4,10 @@
 SCRIPT_DIR=/root/script/
 CONFIG_LOG=./config_log
 LOG_INFO=info.sh
+PUSH_INFO=push.sh
+CONFIG_SERVERS=config_servers
 TEMP_INCRONTAB=incron
-CONFIG_LOG_NUM=4
+CONFIG_LOG_NUM=5
 
 
 
@@ -16,6 +18,8 @@ function copyIncrontab(){
 function copyScript(){
 	$(which mkdir) -p $SCRIPT_DIR 
 	$(which cp) $LOG_INFO $SCRIPT_DIR
+	$(which cp) $PUSH_INFO $SCRIPT_DIR
+	$(which cp) $CONFIG_SERVERS $SCRIPT_DIR
 }
 
 function addIntoIncrontab(){
@@ -23,9 +27,10 @@ function addIntoIncrontab(){
 	c_dir="$2"
 	c_file="$3"
 	c_destination="$4"
+	c_local_folder="$5"
 	t_dir='$@'
 	t_file='$#'
-	command="${c_dir} IN_CLOSE_WRITE $(which bash) ${SCRIPT_DIR}${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${c_destination} ${t_dir} ${t_file}"
+	command="${c_dir} IN_CLOSE_WRITE $(which bash) ${SCRIPT_DIR}${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${c_destination} ${c_local_folder} ${t_dir} ${t_file} ${CONFIG_SERVERS} ${PUSH_INFO}"
 	echo "${command}" >> ${TEMP_INCRONTAB}
 }
 function loadIncrontab(){
@@ -70,6 +75,7 @@ do
 	dir=""
 	file=""
 	destination="*"
+	local_folder=""
 	
 	if [[ ! $LINE == \#* ]]; then 
 		IFS=' ' read -a CONFIG_ARRAY <<< "$LINE"
@@ -82,7 +88,9 @@ do
 			file=${CONFIG_ARRAY[2]}
 			#destination
 			destination=${CONFIG_ARRAY[3]}
-			addIntoIncrontab "$name" "$dir" "$file" "$destination"
+			#local_folder
+			local_foler=${CONFIG_ARRAY[4]}
+			addIntoIncrontab "$name" "$dir" "$file" "$destination" "$local_folder"
 		fi
 
 	fi
