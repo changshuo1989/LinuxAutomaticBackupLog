@@ -5,19 +5,18 @@ DIR=$2
 FILE=$3
 DESTINATION=$4
 LOCAL_FOLDER=$5
-TRIGGER_DIR=$6
-TRIGGER_FILE=$7
-CONFIG_SERVERS=$8
-SUB_SCRIPT=$9
-LOG_DIR=$10
-LOG_FILE=$11
+CONFIG_SERVERS=$6
+SUB_SCRIPT=$7
+LOG_DIR=$8
+LOG_FILE=$9
+TRIGGER_DIR=${10}
+TRIGGER_FILE=${11}
 
 START_TIME=""
 END_TIME=""
 ELAPSED_TIME=""
 ERRORS=""
 INTERVAL="0"
-
 
 START_TIME_LINE_NUM=7
 END_TIME_LINE_NUM=7
@@ -28,7 +27,7 @@ INTERVAL_LINE_NUM=2
 CONFIG_SERVERS_NUM=5
 
 
-
+#echo -e "${DIR}\n${FILE}\n${TRIGGER_DIR}\n${TRIGGER_FILE}" >> /root/file
 if [ "`$(which diff) ${DIR}/${FILE} ${TRIGGER_DIR}/${TRIGGER_FILE}`" = "" ] && [ "$FILE" == "$TRIGGER_FILE" ]; then
 	while read LINE
 	do
@@ -112,32 +111,35 @@ if [ "`$(which diff) ${DIR}/${FILE} ${TRIGGER_DIR}/${TRIGGER_FILE}`" = "" ] && [
 			$(which curl) -k --data "request=addbackuphistory&type=${NAME}&starttime=${START_TIME}&endtime=${END_TIME}&elapsedtime=${ELAPSED_TIME}&errors=${ERRORS}&interval=${INTERVAL}" ${DESTINATION}
 		fi
 		#create sub-processes to push files and send curl request
-		#parse config_servers file
-		while read LINE
-		do
-			#variables
-			server_name=""
-			server_host=""
-			server_port=""
-			server_password=""
-			server_folder=""
-			
-			if [[ ! $LINE == \#* ]]; then
-				#read variables from config file
-				IFS=' ' read -a CONFIG_ARRAY <<< "$LINE";
-				if [ ${#CONFIG_ARRAY[@]} == $CONFIG_SERVERS_NUM ]; then
-					server_name=${CONFIG_ARRAY[0]};
-					server_host=${CONFIG_ARRAY[1]};
-					server_port=${CONFIG_ARRAY[2]};
-					server_password=${CONFIG_ARRAY[3]};
-					server_folder=${CONFIG_ARRAY[4]};
-					#create sub process
-					./${SUB_SCRIPT} ${NAME} ${server_name} ${server_host} ${server_port} ${server_password} ${server_folder} ${LOCAL_FOLER} ${ERRORS} ${INTERVAL} ${DESTINATION} &
-				fi
-				
-			fi		
 
-		done < $CONFIG_SERVERS
+		if [ -e "$CONFIG_SERVERS" ]; then
+			#parse config_servers file
+			while read LINE
+			do
+				#variables
+				server_name=""
+				server_host=""
+				server_port=""
+				server_password=""
+				server_folder=""
+			
+				if [[ ! $LINE == \#* ]]; then
+					#read variables from config file
+					IFS=' ' read -a CONFIG_ARRAY <<< "$LINE";
+					if [ ${#CONFIG_ARRAY[@]} == $CONFIG_SERVERS_NUM ]; then
+						server_name=${CONFIG_ARRAY[0]};
+						server_host=${CONFIG_ARRAY[1]};
+						server_port=${CONFIG_ARRAY[2]};
+						server_password=${CONFIG_ARRAY[3]};
+						server_folder=${CONFIG_ARRAY[4]};
+						#create sub process
+						$(which bash) "$SUB_SCRIPT" "$NAME" "$server_name" "$server_host" "$server_port" "$server_password" "$server_folder" "$LOCAL_FOLDER" "$ERRORS" "$INTERVAL" "$DESTINATION" >> ${LOG_DIR}${LOG_FILE} 2>&1
+					fi
+				
+				fi		
+			done < $CONFIG_SERVERS
+
+		fi
 	fi
 
 else 

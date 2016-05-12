@@ -1,4 +1,5 @@
 #system_name log_dir log_file_name curl_destination local_folder
-Git /HRS/Backup/Log/Git backup.log https://10.32.206.104/Services/Database/interface.php /HRS/Backup/Data/Git
-Jira /HRS/Backup/Log/Jira backup.log https://10.32.206.104/Services/Database/interface.php /HRS/Backup/Data/Jira
-Database /HRS/Backup/Log/Database backup.log https://10.32.206.104/Services/Database/interface.php /HRS/Backup/Data/Database
+#Git /HRS/Backup/Log/Git backup.log https://10.32.206.104/Services/Database/interface.php /HRS/Backup/Data/Git
+#Jira /HRS/Backup/Log/Jira backup.log https://10.32.206.104/Services/Database/interface.php /HRS/Backup/Data/Jira
+#Database /HRS/Backup/Log/Database backup.log https://10.32.206.104/Services/Database/interface.php /HRS/Backup/Data/Database
+Test /home/smithers/log/file filelog https://10.32.206.104/Services/Database/interface.php /home/smithers/testDir

@@ -1,3 +1,5 @@
 #name host port password folder
-skinner hrsbackup@skinner.healthrecoverysolutions.com 4000 BuoV6YgwK9IjP7CX /HRS/Backup
-local	m7hnqhfm8pr2gjkv@169.45.20.201 893 uK90fivMJETGk0ic /HRS/Backup/Test
+#skinner hrsbackup@skinner.healthrecoverysolutions.com 4000 BuoV6YgwK9IjP7CX /HRS/Backup
+#local	m7hnqhfm8pr2gjkv@169.45.20.201 893 uK90fivMJETGk0ic /HRS/Backup/Test
+maggie maggie@10.13.37.18 * magg /home/maggie/testDir
+moe moe@10.13.37.12 22 moe /home/moe/myDir
