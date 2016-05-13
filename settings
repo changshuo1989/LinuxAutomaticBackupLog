@@ -1,0 +1,8 @@
+#directory that stores all the runtime scripts and config_file
+SCRIPT_DIR=/root/script
+
+#directory that stores log
+LOG_DIR=/var/log/backups/
+
+#file that stores log
+LOG_FILE=push.log

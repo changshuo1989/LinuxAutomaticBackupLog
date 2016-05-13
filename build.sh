@@ -1,6 +1,8 @@
 #!/bin/bash
 #this script is used to initial the incron job
 
+
+SETTINGS=./settings
 SCRIPT_DIR=/root/script/
 CONFIG_LOG=./config_log
 LOG_INFO=info.sh
@@ -21,6 +23,7 @@ function copyScript(){
 	$(which cp) $LOG_INFO $SCRIPT_DIR
 	$(which cp) $PUSH_INFO $SCRIPT_DIR
 	$(which cp) $CONFIG_SERVERS $SCRIPT_DIR
+	$(which cp) $CONFIG_LOG $SCRIPT_DIR
 }
 
 function addIntoIncrontab(){
@@ -62,20 +65,71 @@ if [ "`which incrontab`" = "" ]; then
 	exit 1;
 
 fi
+
+#Ensure we have settings file
+if [ ! -f $SETTINGS ]; then
+	echo "Error: settings file not found!"
+	exit 1
+fi
+
 #check curl
 if [ "`which curl`" = "" ]; then
-	echo "No curl tool found, you might need this tool to send curl requests!"
+	echo "Warning: No curl tool found, you might need this tool to send curl requests!"
+	read -p "Are you sure you want to ignore this warning and contine? [Y/N]" USER_RESPONSE
+	if echo $USER_RESPONSE | grep -iq Y; then
+		:
+	else
+		exit 1
+	fi
 	
 fi
 
 #check sshpass
 if [ "`which sshpass`" = "" ]; then
-	echo "No sshpass found, you might need this tool to push files!"
+	echo "Warning: No sshpass found, you might need this tool to push files!"
+	read -p "Are you sure you want to ignore this warning and contine? [Y/N]" USER_RESPONSE
+	if echo $USER_RESPONSE | grep -iq Y; then
+		:
+	else
+		exit 1
+	fi
 fi
+
+
+
+
+
+#read setting variables from settings file
+while read LINE
+do
+	if [[ $LINE == SCRIPT_DIR* ]]; then
+		IFS='=' read -a SCRIPT_DIR_ARRAY <<< "$LINE";
+		if [ ${#SCRIPT_DIR_ARRAY[@]} == 2 ]; then
+			SCRIPT_DIR=${SCRIPT_DIR_ARRAY[1]};
+		fi
+
+	elif [[ $LINE == LOG_DIR* ]]; then
+		IFS='=' read -a LOG_DIR_ARRAY <<< "$LINE";
+		if [ ${#LOG_DIR_ARRAY[@]} == 2 ]; then
+			LOG_DIR=${LOG_DIR_ARRAY[1]};
+		fi
+
+	elif [[ $LINE == LOG_FILE* ]]; then
+		IFS='=' read -a LOG_FILE_ARRAY <<< "$LINE";
+		if [ ${#LOG_FILE_ARRAY[@]} == 2 ]; then		
+			LOG_FILE=${LOG_FILE_ARRAY[1]};
+		fi
+	fi
+	
+
+done < $SETTINGS 
+
+
+
 
 #create log file
 $(which mkdir) -p ${LOG_DIR}
-$(which touch) ${LOG_DIR}${LOG_FILE}
+$(which touch) ${LOG_DIR}/${LOG_FILE}
 
 
 copyIncrontab
