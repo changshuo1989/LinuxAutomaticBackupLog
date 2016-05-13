@@ -27,7 +27,7 @@ $(which sshpass) -p ${SERVER_PASSWORD} $(which scp) -r -P ${SERVER_PORT} ${LOCAL
 endTime=$(date "+%a %b %d %T %Y")
 duration=$SECONDS
 elapsed_time=0
-if [ "$duration" \> 60 ]; then 
+if [ "$duration" -gt 60 ]; then 
 	elapsed_time="$(($duration / 60)) minutes and $(($duration % 60)) seconds"
 else
 	elapsed_time="${duration} seconds"	
