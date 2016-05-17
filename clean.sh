@@ -46,20 +46,20 @@ do
                 IFS='=' read -a SCRIPT_DIR_ARRAY <<< "$LINE";
                 if [ ${#SCRIPT_DIR_ARRAY[@]} == 2 ]; then
                         SCRIPT_DIR=${SCRIPT_DIR_ARRAY[1]};
-			echo $SCRIPT_DIR
+			#echo $SCRIPT_DIR
                 fi
 	elif [[ $LINE == LOG_DIR* ]]; then
                 IFS='=' read -a LOG_DIR_ARRAY <<< "$LINE";
                 if [ ${#LOG_DIR_ARRAY[@]} == 2 ]; then
                         LOG_DIR=${LOG_DIR_ARRAY[1]};
-			echo $LOG_DIR
+			#echo $LOG_DIR
                 fi
 
         elif [[ $LINE == LOG_FILE* ]]; then
                 IFS='=' read -a LOG_FILE_ARRAY <<< "$LINE";
                 if [ ${#LOG_FILE_ARRAY[@]} == 2 ]; then
                         LOG_FILE=${LOG_FILE_ARRAY[1]};
-			echo $LOG_FILE
+			#echo $LOG_FILE
                 fi
         fi
 done < $SETTINGS

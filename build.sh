@@ -34,7 +34,7 @@ function addIntoIncrontab(){
 	c_local_folder="$5"
 	t_dir='$@'
 	t_file='$#'
-	command="${c_dir} IN_CLOSE_WRITE $(which bash) ${SCRIPT_DIR}${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${c_destination} ${c_local_folder} ${SCRIPT_DIR}${CONFIG_SERVERS} ${SCRIPT_DIR}${PUSH_INFO} ${LOG_DIR} ${LOG_FILE} ${t_dir} ${t_file}"
+	command="${c_dir} IN_CLOSE_WRITE $(which bash) ${SCRIPT_DIR}/${LOG_INFO} ${c_name} ${c_dir} ${c_file} ${c_destination} ${c_local_folder} ${SCRIPT_DIR}/${CONFIG_SERVERS} ${SCRIPT_DIR}/${PUSH_INFO} ${LOG_DIR} ${LOG_FILE} ${t_dir} ${t_file}"
 	echo "${command}" >> ${TEMP_INCRONTAB}
 }
 function loadIncrontab(){
